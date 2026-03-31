@@ -123,6 +123,7 @@ export function SidebarOverlay({ items, label, ...rest }: SidebarOverlayProps) {
   return (
     <Overlay
       portalContainer={
+        (document.querySelector('.dashboard-mobile-content-wrapper') as HTMLElement) ||
         (document.querySelector('.Pane.vertical.Pane2') as HTMLElement) ||
         document.body
       }

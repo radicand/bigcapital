@@ -4,6 +4,7 @@ import SplitPane from 'react-split-pane';
 import { debounce } from 'lodash';
 
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
+import { useIsMobile } from '@/hooks/useMobileResponsive';
 import { compose } from '@/utils';
 
 function DashboardSplitPane({
@@ -11,6 +12,7 @@ function DashboardSplitPane({
   children
 }) {
   const initialSize = 220;
+  const isMobile = useIsMobile();
 
   const [defaultSize, setDefaultSize] = useState(
     parseInt(localStorage.getItem('dashboard-size'), 10) || initialSize,
@@ -24,6 +26,14 @@ function DashboardSplitPane({
     debounceSaveSize.current(size);
     setDefaultSize(size);
   }
+
+  // On mobile, skip the split pane entirely and render only the content pane
+  if (isMobile) {
+    // children[0] = Sidebar (skip), children[1] = Content
+    const content = React.Children.toArray(children);
+    return <div className="dashboard-mobile-content-wrapper">{content[1]}</div>;
+  }
+
   return (
     <SplitPane
       allowResize={sidebarExpended}

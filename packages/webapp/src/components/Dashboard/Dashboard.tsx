@@ -15,6 +15,17 @@ import DashboardProvider from './DashboardProvider';
 import DrawersContainer from '@/components/DrawersContainer';
 import AlertsContainer from '@/containers/AlertsContainer';
 import { DashboardSockets } from './DashboardSockets';
+import { MobileSidebarProvider } from './MobileSidebarContext';
+import { MobileSidebarOverlay } from './MobileSidebarOverlay';
+import { useMobileSidebarContext } from './MobileSidebarContext';
+
+/**
+ * Mobile sidebar that reads context.
+ */
+function MobileSidebarConnected() {
+  const { isOpen, close } = useMobileSidebarContext();
+  return <MobileSidebarOverlay isOpen={isOpen} onClose={close} />;
+}
 
 /**
  * Dashboard preferences.
@@ -46,17 +57,20 @@ function DashboardAnyPage() {
 export default function Dashboard() {
   return (
     <DashboardProvider>
-      <Switch>
-        <Route path="/preferences" component={DashboardPreferences} />
-        <Route path="/" component={DashboardAnyPage} />
-      </Switch>
+      <MobileSidebarProvider>
+        <Switch>
+          <Route path="/preferences" component={DashboardPreferences} />
+          <Route path="/" component={DashboardAnyPage} />
+        </Switch>
 
-      <DashboardSockets />
-      <DashboardUniversalSearch />
-      <GlobalHotkeys />
-      <DialogsContainer />
-      <DrawersContainer />
-      <AlertsContainer />
+        <MobileSidebarConnected />
+        <DashboardSockets />
+        <DashboardUniversalSearch />
+        <GlobalHotkeys />
+        <DialogsContainer />
+        <DrawersContainer />
+        <AlertsContainer />
+      </MobileSidebarProvider>
     </DashboardProvider>
   );
 }

@@ -42,6 +42,7 @@
 // fonts
 @import 'pages/fonts';
 @import "section";
+@import "_responsive";
 
 body {
   background-color: var(--color-app-body);

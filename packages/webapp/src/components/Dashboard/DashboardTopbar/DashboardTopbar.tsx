@@ -39,6 +39,7 @@ import {
 } from '@/constants/routes';
 
 import { compose } from '@/utils';
+import { useMobileSidebarContext } from '@/components/Dashboard/MobileSidebarContext';
 
 /**
  * Dashboard topbar.
@@ -62,13 +63,18 @@ function DashboardTopbar({
   openDialog,
 }) {
   const history = useHistory();
+  const { isMobile, toggle: toggleMobileSidebar } = useMobileSidebarContext();
 
   const handlerClickEditView = () => {
     history.push(`/custom_views/${editViewId}/edit`);
   };
 
   const handleSidebarToggleBtn = () => {
-    toggleSidebarExpand();
+    if (isMobile) {
+      toggleMobileSidebar();
+    } else {
+      toggleSidebarExpand();
+    }
   };
 
   return (

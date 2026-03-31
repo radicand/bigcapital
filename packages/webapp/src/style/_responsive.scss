@@ -1,0 +1,618 @@
+// =============================================================================
+// Mobile Responsive Foundation
+// =============================================================================
+// Breakpoints:
+//   - iPhone SE / small phones: 375px
+//   - Samsung Galaxy S26 Ultra: 412px
+//   - General mobile max: 768px
+//   - Tablet: 1024px
+// =============================================================================
+
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+
+@mixin mobile {
+  @media (max-width: #{$breakpoint-mobile}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: #{$breakpoint-tablet}) {
+    @content;
+  }
+}
+
+@mixin desktop-only {
+  @media (min-width: #{$breakpoint-mobile + 1px}) {
+    @content;
+  }
+}
+
+// =============================================================================
+// App Shell Mobile Overrides
+// =============================================================================
+
+// Remove min-width constraint on mobile
+.App {
+  @include mobile {
+    min-width: 100% !important;
+    overflow-x: hidden;
+  }
+}
+
+// Body overflow handling for mobile
+body {
+  @include mobile {
+    overflow-x: hidden;
+  }
+}
+
+// =============================================================================
+// Split Pane / Sidebar Layout - Mobile
+// =============================================================================
+
+// Mobile content wrapper - replaces SplitPane on mobile
+.dashboard-mobile-content-wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// Fallback: On mobile, if SplitPane still renders somehow, hide sidebar pane
+@include mobile {
+  .SplitPane.vertical {
+    .Pane1 {
+      display: none !important;
+      width: 0 !important;
+    }
+
+    .Resizer {
+      display: none !important;
+    }
+
+    .Pane2 {
+      width: 100% !important;
+      flex: 1 !important;
+    }
+  }
+}
+
+// =============================================================================
+// Mobile Sidebar Overlay
+// =============================================================================
+
+.sidebar-mobile-overlay {
+  display: none;
+
+  @include mobile {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+
+    &.is-open {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    &__backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      padding: 0;
+      cursor: default;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    &__drawer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 280px;
+      max-width: 80vw;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      z-index: 1;
+      overflow-y: auto;
+
+      .is-open & {
+        transform: translateX(0);
+      }
+    }
+
+    // Reuse existing sidebar styling inside the drawer
+    .sidebar {
+      width: 100% !important;
+      height: 100%;
+      position: relative !important;
+    }
+  }
+}
+
+// =============================================================================
+// Dashboard Topbar - Mobile
+// =============================================================================
+
+.dashboard__topbar {
+  @include mobile {
+    min-height: 50px;
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+// Truncate topbar title and reduce padding
+.dashboard__topbar-left {
+  @include mobile {
+    min-width: 0;
+    flex-shrink: 1;
+    overflow: hidden;
+  }
+}
+
+// Hide verbose topbar items on mobile
+.dashboard__topbar-right {
+  @include mobile {
+    flex-shrink: 0;
+
+    .dashboard__topbar-navbar {
+      .bp4-navbar {
+        box-shadow: none;
+        padding: 0;
+        height: auto;
+      }
+
+      .bp4-navbar-group {
+        height: auto;
+
+        // Hide text in buttons, keep icons
+        .bp4-button-text {
+          display: none;
+        }
+
+        .bp4-navbar-divider {
+          display: none;
+        }
+
+        // Reduce button padding
+        .bp4-button {
+          padding: 6px;
+        }
+      }
+    }
+
+    .dashboard__topbar-user {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Hide breadcrumbs on mobile - they waste space
+.dashboard__breadcrumbs {
+  @include mobile {
+    display: none;
+  }
+}
+
+// Compact dashboard title on mobile
+.dashboard__title {
+  @include mobile {
+    h1 {
+      font-size: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+    }
+  }
+}
+
+// Organization name - truncate on mobile
+.dashboard__organization-name {
+  @include mobile {
+    font-size: 13px;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// =============================================================================
+// Dashboard Actions Bar - Mobile
+// =============================================================================
+
+.dashboard__actions-bar {
+  @include mobile {
+    .bp4-navbar {
+      padding-left: 8px;
+      padding-right: 8px;
+      flex-wrap: wrap;
+      height: auto;
+      min-height: 40px;
+
+      .bp4-navbar-group {
+        flex-wrap: wrap;
+      }
+
+      .bp4-button {
+        font-size: 13px;
+        padding: 6px 8px;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Dashboard Content - Mobile
+// =============================================================================
+
+.dashboard-content {
+  @include mobile {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden;
+  }
+}
+
+// Override the .sidebar--mini-sidebar + .dashboard-content layout on mobile
+@include mobile {
+  .sidebar--mini-sidebar + .dashboard-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+// =============================================================================
+// Data Tables - Mobile
+// =============================================================================
+
+@include mobile {
+  // Allow horizontal scrolling for wide tables
+  .bigcapital-datatable {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .table {
+      // Table cells - reduce padding for fit
+      .td,
+      .th {
+        padding: 8px 6px;
+        font-size: 13px;
+      }
+
+      // Ensure header text truncates
+      .thead .th > div {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  // DataTable context menu - ensure it's visible
+  .bigcapital-datatable .table .tr .bp4-context-menu-popover-target {
+    z-index: 100;
+  }
+}
+
+// =============================================================================
+// Views / Financial Reports - Mobile
+// =============================================================================
+
+@include mobile {
+  // Financial Statements filter bar
+  .financial-header {
+    flex-direction: column;
+    gap: 8px;
+
+    .bp4-form-group {
+      margin-bottom: 4px;
+    }
+  }
+
+  // Financial statement tables - allow horizontal scrolling
+  .financial-statement__header + .bigcapital-datatable,
+  .financial-statement .bigcapital-datatable {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  // General table constraint wrapper
+  .table--constrant {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  // Financial statement header - reduce padding
+  .financial-statement__header {
+    padding: 16px 12px;
+
+    .financial-statement__header-organization {
+      font-size: 16px;
+    }
+  }
+}
+
+// =============================================================================
+// Dashboard Insider (main scrollable area) - Mobile
+// =============================================================================
+
+.dashboard__insider {
+  @include mobile {
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+// Dashboard page wrapper - prevent bleed
+.dashboard__page {
+  @include mobile {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+// =============================================================================
+// Sidebar Overlay (sub-menu) - Mobile
+// =============================================================================
+
+@include mobile {
+  // The SidebarOverlay portal renders as a BP Overlay. On mobile, position it
+  // as a full-screen overlay since the Pane2 container doesn't exist.
+  .sidebar-overlay {
+    width: 100vw !important;
+    max-width: 100vw;
+    left: 0;
+  }
+
+  .sidebar-overlay-backdrop {
+    z-index: 99;
+  }
+
+  // When the sidebar sub-overlay renders in the mobile overlay context,
+  // make sure it appears above the mobile sidebar drawer
+  .bp4-overlay-content.sidebar-overlay {
+    z-index: 101;
+  }
+}
+
+// =============================================================================
+// Homepage Cards - Mobile
+// =============================================================================
+
+@include mobile {
+  // Make homepage card grid single-column on small screens
+  .homepage__container {
+    margin: 12px 12px !important;
+    flex-direction: column;
+
+    .shortcut-boxes {
+      max-width: 100%;
+
+      .shortcut-box {
+        width: 100% !important;
+      }
+    }
+
+    .announcements-list {
+      margin-left: 0;
+      margin-top: 16px;
+      max-width: 100%;
+    }
+  }
+
+  // Section titles on homepage
+  .homepage-section-title,
+  .shortcut-boxes-section__title {
+    font-size: 18px;
+    padding: 0 12px;
+  }
+}
+
+// =============================================================================
+// Dialogs & Drawers - Mobile
+// =============================================================================
+
+@include mobile {
+  // Make Blueprint dialogs take full width on mobile
+  .bp4-dialog {
+    width: calc(100vw - 20px) !important;
+    max-width: 100vw;
+    margin: 10px;
+  }
+
+  // Blueprint drawers should be full-screen on mobile
+  .bp4-drawer {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+
+  // Blueprint overlay backdrops - ensure proper z-index on mobile
+  .bp4-overlay-backdrop {
+    position: fixed;
+  }
+
+  // Dialog close button - make larger touch target
+  .bp4-dialog-close-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+// =============================================================================
+// Forms - Mobile
+// =============================================================================
+
+@include mobile {
+  // Form groups - stack labels above inputs
+  .bp4-form-group.bp4-inline {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .bp4-label {
+      margin-bottom: 4px;
+    }
+
+    .bp4-form-content {
+      width: 100%;
+    }
+  }
+
+  // Page form floating actions - bottom fixed bar on mobile
+  .page-form {
+    padding-bottom: 80px; // Make room for fixed bottom bar
+
+    &__floating-actions {
+      left: 0 !important;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      border-radius: 0;
+      padding: 10px 12px;
+      z-index: 50;
+
+      // Wrap buttons if needed
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+  }
+
+  // Page form header fields - full width on mobile
+  .page-form__header-fields {
+    width: 100% !important;
+  }
+
+  // Page form header - reduce padding
+  .page-form__header {
+    padding: 14px 12px;
+  }
+
+  // Page form content - reduce padding
+  .page-form__content {
+    padding: 12px;
+  }
+
+  // Two-column form layouts should stack on mobile
+  .page-form__header-fields .row {
+    flex-direction: column;
+
+    > .col,
+    > [class*="col-"] {
+      width: 100%;
+      max-width: 100%;
+      flex: 0 0 100%;
+    }
+  }
+}
+
+// =============================================================================
+// Preferences Page - Mobile
+// =============================================================================
+
+@include mobile {
+  // Override preferences dashboard-content row direction
+  .dashboard-content--preferences {
+    flex-direction: column !important;
+  }
+
+  .preferences-page {
+    flex-direction: column !important;
+    min-width: 0 !important;
+
+    .preferences-page__sidebar {
+      width: 100% !important;
+      max-width: 100%;
+      border-right: none;
+      border-bottom: 1px solid var(--color-datatable-head-border, rgba(255, 255, 255, 0.1));
+    }
+
+    .preferences-page__content {
+      width: 100% !important;
+      flex-shrink: 1;
+      margin-left: 0 !important;
+    }
+  }
+
+  // Override the fixed positioning of preferences sidebar
+  .preferences-sidebar {
+    position: relative !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  // Reduce preferences sidebar menu height so content is visible
+  .preferences-sidebar__menu {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
+
+// =============================================================================
+// View Form (Invoice/Bill form pages) - Mobile
+// =============================================================================
+
+@include mobile {
+  // Ensure line item tables can scroll horizontally
+  .page-form .entries-table,
+  .page-form .table-constent {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  // Reduce the editable table padding
+  .editable-datatable .table {
+    .td,
+    .th {
+      padding: 6px 4px;
+      font-size: 12px;
+    }
+  }
+}
+
+// =============================================================================
+// Banking Module - Mobile
+// =============================================================================
+
+@include mobile {
+  // Banking page split layout
+  .banking-page__split {
+    flex-direction: column !important;
+
+    > * {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+}
+
+// =============================================================================
+// Accounts Chart - Mobile
+// =============================================================================
+
+@include mobile {
+  .accounts-chart-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
