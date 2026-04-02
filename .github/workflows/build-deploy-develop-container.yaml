@@ -17,7 +17,7 @@ permissions:
 jobs:
   build-publish-webapp:
     name: Build and deploy webapp container
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,10 +46,10 @@ jobs:
         with:
           context: ./
           file: ./packages/webapp/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/arm64
           push: true
           labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ env.WEBAPP_IMAGE_NAME }}:develop
+          tags: ${{ env.WEBAPP_IMAGE_NAME }}:radicand-develop
 
       - name: Export digest
         run: |
@@ -67,7 +67,7 @@ jobs:
 
   build-publish-server:
     name: Build and deploy server container
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -96,9 +96,9 @@ jobs:
         with:
           context: ./
           file: ./packages/server/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/arm64
           push: true
-          tags: ${{ env.SERVER_IMAGE_NAME }}:develop
+          tags: ${{ env.SERVER_IMAGE_NAME }}:radicand-develop
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Export digest
@@ -117,7 +117,7 @@ jobs:
 
   build-publish-migration:
     name: Build and deploy migration container
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     needs:
       - build-publish-server
     steps:
@@ -146,7 +146,7 @@ jobs:
         with:
           context: ./
           file: ./docker/migration/Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
           push: true
           tags: ${{ env.MIGRATION_IMAGE_NAME }}:radicand-develop
           labels: ${{ steps.meta.outputs.labels }}
