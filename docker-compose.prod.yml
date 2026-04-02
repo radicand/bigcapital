@@ -20,14 +20,14 @@ services:
 
   webapp:
     container_name: bigcapital-webapp
-    image: bigcapitalhq/webapp:latest
+    image: ${WEBAPP_IMAGE:-ghcr.io/radicand/bigcapital-webapp:latest}
     restart: on-failure
     networks:
       - bigcapital_network
 
   server:
     container_name: bigcapital-server
-    image: bigcapitalhq/server:latest
+    image: ${SERVER_IMAGE:-ghcr.io/radicand/bigcapital-server:latest}
     expose:
       - '3000'
     links:

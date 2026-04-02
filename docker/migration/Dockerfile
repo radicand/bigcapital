@@ -1,4 +1,5 @@
-FROM bigcapitalhq/server:latest as build
+ARG BASE_SERVER_IMAGE=radicand/bigcapital-server:latest
+FROM ${BASE_SERVER_IMAGE} AS build
 
 ARG DB_HOST= \
   DB_USER= \

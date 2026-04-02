@@ -6,40 +6,38 @@ on:
   workflow_dispatch:
 
 env:
-  WEBAPP_IMAGE_NAME: bigcapitalhq/webapp
-  SERVER_IMAGE_NAME: bigcapitalhq/server
+  WEBAPP_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/bigcapital-webapp
+  SERVER_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/bigcapital-server
+  MIGRATION_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/bigcapital-migration
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   build-publish-webapp:
-    strategy:
-      fail-fast: false
     name: Build and deploy webapp container
     runs-on: ubuntu-latest
-    environment: production
     steps:
-      - name: Prepare
-        run: |
-          platform=${{ matrix.platform }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Login to Container registry.
+      # Login to GHCR.
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-            images: ${{ env.WEBAPP_IMAGE_NAME }}
+          images: ${{ env.WEBAPP_IMAGE_NAME }}
 
       # Builds and push the Docker image.
       - name: Build and push Docker image
@@ -51,7 +49,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           labels: ${{ steps.meta.outputs.labels }}
-          tags: bigcapitalhq/webapp:latest, bigcapitalhq/webapp:${{github.ref_name}}
+          tags: ${{ env.WEBAPP_IMAGE_NAME }}:latest,${{ env.WEBAPP_IMAGE_NAME }}:${{ github.ref_name }}
 
       - name: Export digest
         run: |
@@ -66,33 +64,30 @@ jobs:
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
-      # Send notification to Slack channel.
-      - name: Slack Notification built and published webapp container successfully.
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
   build-publish-server:
     name: Build and deploy server container
     runs-on: ubuntu-latest
     steps:
-      - name: Prepare
-        run: |
-          platform=${{ matrix.platform }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Login to Container registry.
+      # Login to GHCR.
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.SERVER_IMAGE_NAME }}
 
       # Builds and push the Docker image.
       - name: Build and push Docker image
@@ -103,7 +98,7 @@ jobs:
           file: ./packages/server/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: bigcapitalhq/server:latest, bigcapitalhq/server:${{github.ref_name}}
+          tags: ${{ env.SERVER_IMAGE_NAME }}:latest,${{ env.SERVER_IMAGE_NAME }}:${{ github.ref_name }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Export digest
@@ -120,8 +115,40 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-      # Send notification to Slack channel.
-      - name: Slack Notification built and published server container successfully.
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  build-publish-migration:
+    name: Build and deploy migration container
+    runs-on: ubuntu-latest
+    needs:
+      - build-publish-server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.MIGRATION_IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        id: build
+        with:
+          context: ./
+          file: ./docker/migration/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ env.MIGRATION_IMAGE_NAME }}:latest,${{ env.MIGRATION_IMAGE_NAME }}:${{ github.ref_name }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BASE_SERVER_IMAGE=${{ env.SERVER_IMAGE_NAME }}:${{ github.ref_name }}
