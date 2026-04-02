@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:18.16.0-alpine AS builder
+FROM node:25-alpine AS builder
 
 WORKDIR /app
 
@@ -27,7 +27,7 @@ COPY --chown=node:node ./packages/server ./packages/server
 RUN pnpm run build:server --skip-nx-cache
 
 # Stage 2: Production
-FROM node:18.16.0-alpine AS production
+FROM node:25-alpine AS production
 
 WORKDIR /app
 

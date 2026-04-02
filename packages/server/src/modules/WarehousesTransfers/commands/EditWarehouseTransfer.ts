@@ -83,7 +83,8 @@ export class EditWarehouseTransfer {
       } as IWarehouseTransferEditPayload);
 
       // Updates warehouse transfer graph on the storage.
-      const warehouseTransfer = await this.warehouseTransferModel()
+      const warehouseTransfer =
+        (await this.warehouseTransferModel()
         .query(trx)
         .upsertGraphAndFetch({
           id: warehouseTransferId,
@@ -95,7 +96,7 @@ export class EditWarehouseTransfer {
           editWarehouseDTO.transferInitiated
             ? { transferInitiatedAt: new Date() }
             : {}),
-        });
+        })) as unknown as ModelObject<WarehouseTransfer>;
       // Triggers `onWarehouseTransferEdit` event
       await this.eventPublisher.emitAsync(events.warehouseTransfer.onEdited, {
         editWarehouseDTO,

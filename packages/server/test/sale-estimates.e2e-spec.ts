@@ -44,7 +44,6 @@ describe('Sale Estimates (e2e)', () => {
         type: 'inventory',
         sellable: true,
         purchasable: true,
-        type: 'service',
         sellAccountId: 1026,
         costAccountId: 1019,
         costPrice: 100,

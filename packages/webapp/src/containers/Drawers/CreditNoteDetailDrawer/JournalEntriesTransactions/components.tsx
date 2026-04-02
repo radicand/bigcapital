@@ -13,7 +13,6 @@ export const useJournalEntriesTransactionsColumns = () => {
     () => [
       {
         Header: intl.get('date'),
-        accessor: 'date',
         accessor: 'formatted_date',
         Cell: FormatDateCell,
         width: 140,

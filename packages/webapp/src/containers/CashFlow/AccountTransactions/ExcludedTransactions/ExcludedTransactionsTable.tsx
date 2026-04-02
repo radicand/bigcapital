@@ -95,7 +95,6 @@ function ExcludedTransactionsTableRoot({
       ContextMenu={ActionsMenu}
       onCellClick={handleCellClick}
       // #TableVirtualizedListRows props.
-      vListrowHeight={'small' == 'small' ? 32 : 40}
       vListrowHeight={40}
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}

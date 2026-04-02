@@ -15,7 +15,7 @@ argument-hint: "[area or question about the codebase]"
 
 Bigcapital is an **open-source, multi-tenant financial accounting SaaS application**. It provides double-entry bookkeeping, invoicing, bills, inventory, banking (Plaid), financial reports, multi-branch/warehouse, roles & permissions, and payment integrations (Stripe/PayPal).
 
-- **Runtime**: Node.js 18.16.1 (use `nvm use 18.16.1` before running commands)
+- **Runtime**: Node.js 25 (use `nvm use 25` before running commands)
 - **Package Manager**: pnpm (monorepo managed by Lerna)
 - **Monorepo Structure**: `packages/*` and `shared/*` workspaces
 
@@ -408,7 +408,7 @@ Browser-level tests for authentication, items, onboarding.
 ## Development Workflow
 
 ### Prerequisites
-- Node.js 18.16.1 (`nvm use 18.16.1`)
+- Node.js 25 (`nvm use 25`)
 - pnpm
 - Docker (for MariaDB, Redis, Gotenberg)
 
