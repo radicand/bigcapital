@@ -3,7 +3,7 @@ name: Build and Deploy Develop Docker Container
 on:
   push:
     branches:
-      - develop
+      - radicand-develop
 
 env:
   WEBAPP_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/bigcapital-webapp
@@ -146,9 +146,9 @@ jobs:
         with:
           context: ./
           file: ./docker/migration/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ env.MIGRATION_IMAGE_NAME }}:develop
+          tags: ${{ env.MIGRATION_IMAGE_NAME }}:radicand-develop
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BASE_SERVER_IMAGE=${{ env.SERVER_IMAGE_NAME }}:develop
+            BASE_SERVER_IMAGE=${{ env.SERVER_IMAGE_NAME }}:radicand-develop

@@ -1,4 +1,4 @@
-ARG BASE_SERVER_IMAGE=radicand/bigcapital-server:latest
+ARG BASE_SERVER_IMAGE=ghcr.io/radicand/bigcapital-server:radicand-develop
 FROM ${BASE_SERVER_IMAGE} AS build
 
 ARG DB_HOST= \
