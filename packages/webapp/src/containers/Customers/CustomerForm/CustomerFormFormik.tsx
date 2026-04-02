@@ -74,7 +74,6 @@ type CustomerFormFormikRootProps = {
     submitPayload: CustomerFormSubmitPayload,
     errorData?: unknown,
   ) => void;
-  onCancel?: () => void;
   className?: string;
 };
 
@@ -87,9 +86,8 @@ function CustomerFormFormikRoot({
   initialValues: initialCustomerValues = EMPTY_INITIAL_VALUES,
   onSubmitSuccess,
   onSubmitError,
-  // `onCancel` is accepted for compatibility but currently not used.
   className,
-}: CustomerFormFormikRootProps) {
+}: Readonly<CustomerFormFormikRootProps>) {
   const {
     customer,
     submitPayload,
@@ -171,6 +169,42 @@ const CustomerFormFields = styled.div`
   }
   .bp4-form-group.bp4-inline label.bp4-label {
     min-width: 140px;
+  }
+
+  @media (max-width: 768px) {
+    .bp4-form-content,
+    .bp5-form-content,
+    .bp6-form-content {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .bp4-form-group.bp4-inline,
+    .bp5-form-group.bp5-inline,
+    .bp6-form-group.bp6-inline {
+      display: block;
+    }
+
+    .bp4-form-group.bp4-inline label.bp4-label,
+    .bp5-form-group.bp5-inline label.bp5-label,
+    .bp6-form-group.bp6-inline label.bp6-label {
+      min-width: 0;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .bp4-control-group,
+    .bp5-control-group,
+    .bp6-control-group {
+      flex-wrap: wrap;
+    }
+
+    .bp4-control-group > *,
+    .bp5-control-group > *,
+    .bp6-control-group > * {
+      width: 100%;
+      flex: 1 1 100%;
+    }
   }
 `;
 

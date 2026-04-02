@@ -16,6 +16,12 @@ interface SetupWizardContentProps {
 
 const itemsClassName = css`
   padding: 40px 40px 20px;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px 12px;
+    gap: 8px;
+    overflow-x: auto;
+  }
 `;
 
 /**
@@ -24,7 +30,7 @@ const itemsClassName = css`
 export default function SetupWizardContent({
   stepIndex,
   stepId,
-}: SetupWizardContentProps) {
+}: Readonly<SetupWizardContentProps>) {
   return (
     <x.div w="100%" overflow="auto">
       <Stepper

@@ -33,7 +33,7 @@ describe('Sale Invoices (e2e)', () => {
       .post('/customers')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send({ displayName: 'Test Customer' });
+      .send({ displayName: 'Test Customer', customerType: 'business', currencyCode: 'USD' });
 
     customerId = customer.body.id;
 
@@ -43,6 +43,7 @@ describe('Sale Invoices (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send({
         name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+        type: 'service',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,

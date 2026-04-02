@@ -14,7 +14,7 @@ export class MetableDBStore
   VALUE_COLUMN: string;
   TYPE_COLUMN: string;
   extraQuery: Function;
-  loaded: Boolean;
+  loaded: boolean;
   config: MetableConfig;
   extraColumns: Array<string>;
 

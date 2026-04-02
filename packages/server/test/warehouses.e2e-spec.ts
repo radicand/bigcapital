@@ -48,6 +48,7 @@ describe('Warehouses (e2e)', () => {
       .put(`/warehouses/${warehouseId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
+      .send({ name: faker.commerce.productName(), code: faker.string.alpha(4) })
       .expect(200);
   });
 

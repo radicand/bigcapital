@@ -23,6 +23,7 @@ export function CustomerFloatingActions() {
 
   // Formik context.
   const { submitForm, isSubmitting } = useFormikContext();
+  const submitButtonText = isNewMode ? <T id={'save'} /> : <T id={'edit'} />;
 
   // Handle submit button click.
   const handleSubmitBtnClick = (_event: React.MouseEvent<HTMLElement>) => {
@@ -45,7 +46,7 @@ export function CustomerFloatingActions() {
           intent={Intent.PRIMARY}
           type="submit"
           onClick={handleSubmitBtnClick}
-          text={!isNewMode ? <T id={'edit'} /> : <T id={'save'} />}
+          text={submitButtonText}
         />
         <Popover
           content={
@@ -79,4 +80,8 @@ const FloatingActionsGroup = styled(Group)`
   bottom: 0;
   background: var(--color-card-background);
   z-index: 1;
+
+  @media (max-width: 768px) {
+    padding-left: 0;
+  }
 `;

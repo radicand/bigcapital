@@ -98,4 +98,17 @@ const TermsConditionsText = styled.p`
 
 const RegisterFormRoot = styled(Form)`
   position: relative;
+
+  @media (max-width: 768px) {
+    .name-section {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .name-section > .col,
+    .name-section > [class*='col-'] {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 `;

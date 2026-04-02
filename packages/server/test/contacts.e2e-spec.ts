@@ -11,7 +11,7 @@ describe('Contacts (e2e)', () => {
       .post('/customers')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send({ displayName: 'Test Customer' });
+      .send({ displayName: 'Test Customer', customerType: 'business', currencyCode: 'USD' });
 
     customerId = customer.body.id;
 
@@ -22,6 +22,19 @@ describe('Contacts (e2e)', () => {
       .send({ displayName: 'Test Vendor' });
 
     vendorId = vendor.body.id;
+
+    // Inactivate both contacts so the activate/inactivate tests work correctly.
+    // Newly-created contacts are active by default, so activating them immediately would fail.
+    await request(app.getHttpServer())
+      .patch(`/contacts/${customerId}/inactivate`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader);
+
+    await request(app.getHttpServer())
+      .patch(`/contacts/${vendorId}/activate`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .catch(() => {/* ignore if already active */});
   });
 
   it('/contacts/auto-complete (GET)', () => {
@@ -42,7 +55,7 @@ describe('Contacts (e2e)', () => {
 
   it('/contacts/:id/inactivate (PATCH)', () => {
     return request(app.getHttpServer())
-      .patch(`/contacts/${vendorId}/inactivate`)
+      .patch(`/contacts/${customerId}/inactivate`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);

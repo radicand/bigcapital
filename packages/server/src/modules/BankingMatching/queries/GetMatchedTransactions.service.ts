@@ -54,6 +54,9 @@ export class GetMatchedTransactions {
     uncategorizedTransactionIds: Array<number>,
     filter: GetMatchedTransactionsFilter,
   ): Promise<MatchedTransactionsPOJO> {
+    if (!uncategorizedTransactionIds?.length) {
+      return { perfectMatches: [], possibleMatches: [], totalPending: 0 };
+    }
     const uncategorizedTransactions =
       await this.uncategorizedBankTransactionModel()
         .query()

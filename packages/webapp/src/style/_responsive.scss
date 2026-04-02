@@ -143,6 +143,28 @@ body {
       height: 100%;
       position: relative !important;
     }
+
+    // Override mini-sidebar styles so the overlay always shows full menu
+    .sidebar.sidebar--mini-sidebar {
+      width: 100% !important;
+
+      .sidebar__menu,
+      .sidebar__version {
+        opacity: 1 !important;
+      }
+
+      .sidebar__head-organization {
+        opacity: 1 !important;
+      }
+
+      .sidebar__scroll-wrapper {
+        min-width: 100% !important;
+
+        .ScrollbarsCustom-Scroller {
+          overflow: auto !important;
+        }
+      }
+    }
   }
 }
 
@@ -214,12 +236,29 @@ body {
 // Compact dashboard title on mobile
 .dashboard__title {
   @include mobile {
+    min-width: 0;
+    flex: 1 1 0;
+    overflow: hidden;
+
     h1 {
       font-size: 16px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 180px;
+      // Use a flexible max-width so titles can shrink on very small screens
+      max-width: calc(100vw - 220px);
+    }
+  }
+}
+
+// Back link - compact single-line on mobile
+.dashboard__back-link {
+  @include mobile {
+    margin-left: 8px;
+
+    a {
+      white-space: nowrap;
+      font-size: 13px;
     }
   }
 }
@@ -244,17 +283,27 @@ body {
     .bp4-navbar {
       padding-left: 8px;
       padding-right: 8px;
+      display: flex !important;
       flex-wrap: wrap;
-      height: auto;
+      align-items: center;
+      height: auto !important;
       min-height: 40px;
 
       .bp4-navbar-group {
+        float: none !important;
         flex-wrap: wrap;
+        gap: 2px;
+        height: auto !important;
+        min-height: 40px;
       }
 
       .bp4-button {
         font-size: 13px;
         padding: 6px 8px;
+      }
+
+      .bp4-navbar-divider {
+        display: none !important;
       }
     }
   }

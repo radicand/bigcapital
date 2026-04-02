@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
-import {
-  IEditWarehouseTransferDTO,
+import { omit } from 'lodash';
+import {  IEditWarehouseTransferDTO,
   IWarehouseTransferEditPayload,
   IWarehouseTransferEditedPayload,
 } from '@/modules/Warehouses/Warehouse.types';
@@ -87,7 +87,14 @@ export class EditWarehouseTransfer {
         .query(trx)
         .upsertGraphAndFetch({
           id: warehouseTransferId,
-          ...editWarehouseDTO,
+          ...omit(editWarehouseDTO, ['transferDelivered', 'transferInitiated']),
+          ...(editWarehouseDTO.transferDelivered
+            ? { transferDeliveredAt: new Date() }
+            : {}),
+          ...(editWarehouseDTO.transferDelivered ||
+          editWarehouseDTO.transferInitiated
+            ? { transferInitiatedAt: new Date() }
+            : {}),
         });
       // Triggers `onWarehouseTransferEdit` event
       await this.eventPublisher.emitAsync(events.warehouseTransfer.onEdited, {

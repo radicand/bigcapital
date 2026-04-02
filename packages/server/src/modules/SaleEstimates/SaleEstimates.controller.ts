@@ -97,7 +97,7 @@ export class SaleEstimatesController {
    */
   constructor(
     private readonly saleEstimatesApplication: SaleEstimatesApplication,
-  ) { }
+  ) {}
 
   @Post()
   @RequirePermission(SaleEstimateAction.Create, AbilitySubject.SaleEstimate)
@@ -250,7 +250,10 @@ export class SaleEstimatesController {
   }
 
   @Post(':id/notify-sms')
-  @RequirePermission(SaleEstimateAction.NotifyBySms, AbilitySubject.SaleEstimate)
+  @RequirePermission(
+    SaleEstimateAction.NotifyBySms,
+    AbilitySubject.SaleEstimate,
+  )
   @ApiOperation({ summary: 'Notify the given sale estimate by SMS.' })
   @ApiParam({
     name: 'id',
@@ -337,7 +340,7 @@ export class SaleEstimatesController {
     @Headers('accept') acceptHeader: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    if (acceptHeader?.includes(AcceptType.ApplicationPdf)) {
       const [pdfContent] =
         await this.saleEstimatesApplication.getSaleEstimatePdf(estimateId);
 
@@ -346,7 +349,7 @@ export class SaleEstimatesController {
         'Content-Length': pdfContent.length,
       });
       res.send(pdfContent);
-    } else if (acceptHeader.includes(AcceptType.ApplicationTextHtml)) {
+    } else if (acceptHeader?.includes(AcceptType.ApplicationTextHtml)) {
       const htmlContent =
         await this.saleEstimatesApplication.getSaleEstimateHtml(estimateId);
 

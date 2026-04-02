@@ -11,10 +11,10 @@ import {
   FInputGroup,
   FSelect,
   FTimezoneSelect,
+  Col,
+  Row,
   FormattedMessage as T,
 } from '@/components';
-
-import { Col, Row } from '@/components';
 import { inputIntent } from '@/utils';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
@@ -69,7 +69,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
         />
       </FFormGroup>
 
-      <Row>
+      <Row className={'setup-organization-form__row'}>
         <Col xs={6}>
           {/* ----------  Base currency ----------  */}
           <FFormGroup

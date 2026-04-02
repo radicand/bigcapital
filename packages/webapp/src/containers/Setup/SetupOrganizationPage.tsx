@@ -46,7 +46,7 @@ function SetupOrganizationPage({ wizard }) {
         setCookie('locale', values.language);
         wizard.next();
       })
-      .catch((erros) => {
+      .catch((error_) => {
         setSubmitting(false);
       });
   };
@@ -59,6 +59,14 @@ function SetupOrganizationPage({ wizard }) {
       pt={'45px'}
       pb={'20px'}
       px={'25px'}
+      sx={{
+        '@media (max-width: 768px)': {
+          paddingTop: '24px',
+          paddingBottom: '24px',
+          paddingLeft: '16px',
+          paddingRight: '16px',
+        },
+      }}
     >
       <Formik
         validationSchema={validationSchema}

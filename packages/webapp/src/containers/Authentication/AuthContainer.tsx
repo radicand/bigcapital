@@ -22,13 +22,22 @@ export function AuthContainer({ children }: AuthContainerProps) {
 
 const AuthPage = styled.div``;
 const AuthInsider = styled.div`
-  width: 384px;
+  width: min(384px, calc(100vw - 32px));
+  max-width: 100%;
   margin: 0 auto;
   margin-bottom: 40px;
   padding-top: 80px;
+
+  @media (max-width: 768px) {
+    padding-top: 32px;
+  }
 `;
 
 const AuthLogo = styled.div`
   text-align: center;
   margin-bottom: 40px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 24px;
+  }
 `;

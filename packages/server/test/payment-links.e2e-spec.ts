@@ -31,7 +31,7 @@ describe('Payment Links (e2e)', () => {
       .post('/customers')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send({ displayName: 'Test Customer' });
+      .send({ displayName: 'Test Customer', customerType: 'business', currencyCode: 'USD' });
 
     customerId = customer.body.id;
 
@@ -43,6 +43,7 @@ describe('Payment Links (e2e)', () => {
         name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
         sellable: true,
         purchasable: true,
+        type: 'service',
         sellAccountId: 1026,
         costAccountId: 1019,
         costPrice: 100,

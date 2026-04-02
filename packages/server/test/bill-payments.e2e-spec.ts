@@ -14,7 +14,7 @@ const createBillPaymentRequest = () => ({
   entries: [
     {
       billId: billId,
-      paymentAmount: 1000,
+      paymentAmount: 1,
     },
   ],
 });
@@ -37,6 +37,7 @@ describe('Bill Payments (e2e)', () => {
         name: faker.commerce.productName(),
         sellable: true,
         purchasable: true,
+        type: 'service',
         sellAccountId: 1026,
         costAccountId: 1019,
         costPrice: 100,
@@ -59,13 +60,19 @@ describe('Bill Payments (e2e)', () => {
           {
             index: 1,
             itemId: itemId,
-            quantity: 2,
+            quantity: 10000,
             rate: 1000,
             description: 'Item description...',
           },
         ],
       });
     billId = bill.body.id;
+
+    // Open the bill so it can be paid.
+    await request(app.getHttpServer())
+      .patch(`/bills/${billId}/open`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader);
   });
 
   it('/bill-payments (POST)', async () => {

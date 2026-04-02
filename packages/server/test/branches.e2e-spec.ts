@@ -48,6 +48,7 @@ describe('Branches (e2e)', () => {
       .put(`/branches/${branchId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
+      .send({ name: faker.commerce.productName(), code: faker.string.alpha(4) })
       .expect(200);
   });
 

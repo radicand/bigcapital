@@ -44,6 +44,10 @@ export const AuthInsiderCard = styled.div`
   padding: 26px 22px;
   background: var(--x-color-background);
   border-radius: 3px;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+  }
 `;
 
 export const AuthInsiderCopyright = styled.div`
@@ -68,6 +72,11 @@ export const AuthFooterLinks = styled.div`
   padding-left: 1.2rem;
   padding-right: 1.2rem;
   margin-top: 1rem;
+
+  @media (max-width: 768px) {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
 `;
 
 export const AuthFooterLink = styled.p`

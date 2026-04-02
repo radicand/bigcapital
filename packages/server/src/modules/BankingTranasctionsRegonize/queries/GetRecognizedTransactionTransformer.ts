@@ -1,4 +1,4 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class GetRecognizedTransactionTransformer extends Transformer {
   /**
@@ -43,12 +43,12 @@ export class GetRecognizedTransactionTransformer extends Transformer {
 
   /**
    * Get the uncategorized transaction id.
-   * @param transaction 
+   * @param transaction
    * @returns {number}
    */
   public uncategorizedTransactionId = (transaction): number => {
-    return transaction.id; 
-  }
+    return transaction.id;
+  };
 
   /**
    * Get the reference number of the transaction.
@@ -121,7 +121,7 @@ export class GetRecognizedTransactionTransformer extends Transformer {
    * @returns {number}
    */
   public assignedAccountId(transaction: any): number {
-    return transaction.recognizedTransaction.assignedAccountId;
+    return transaction.recognizedTransaction?.assignedAccountId ?? null;
   }
 
   /**
@@ -130,7 +130,7 @@ export class GetRecognizedTransactionTransformer extends Transformer {
    * @returns {string}
    */
   public assignedAccountName(transaction: any): string {
-    return transaction.recognizedTransaction.assignAccount.name;
+    return transaction.recognizedTransaction?.assignAccount?.name ?? null;
   }
 
   /**
@@ -139,7 +139,7 @@ export class GetRecognizedTransactionTransformer extends Transformer {
    * @returns {string}
    */
   public assignedAccountCode(transaction: any): string {
-    return transaction.recognizedTransaction.assignAccount.code;
+    return transaction.recognizedTransaction?.assignAccount?.code ?? null;
   }
 
   /**
@@ -170,11 +170,11 @@ export class GetRecognizedTransactionTransformer extends Transformer {
   }
 
   /**
-   * 
+   *
    * @returns {string}
    */
   public assignedCategoryFormatted() {
-    return 'Other Income'
+    return 'Other Income';
   }
 
   /**
@@ -256,6 +256,6 @@ export class GetRecognizedTransactionTransformer extends Transformer {
    * @returns {string}
    */
   protected bankRuleName(transaction) {
-    return transaction.recognizedTransaction.bankRule.name;
+    return transaction.recognizedTransaction?.bankRule?.name ?? null;
   }
 }

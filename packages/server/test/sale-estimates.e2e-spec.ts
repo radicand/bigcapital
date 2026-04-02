@@ -31,7 +31,7 @@ describe('Sale Estimates (e2e)', () => {
       .post('/customers')
       .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
-      .send({ displayName: 'Test Customer' });
+      .send({ displayName: 'Test Customer', customerType: 'business', currencyCode: 'USD' });
 
     customerId = customer.body.id;
 
@@ -44,6 +44,7 @@ describe('Sale Estimates (e2e)', () => {
         type: 'inventory',
         sellable: true,
         purchasable: true,
+        type: 'service',
         sellAccountId: 1026,
         costAccountId: 1019,
         costPrice: 100,

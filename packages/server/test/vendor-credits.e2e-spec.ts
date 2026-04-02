@@ -29,7 +29,7 @@ describe('Vendor Credits (e2e)', () => {
       .post('/vendors')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send({ displayName: 'Test Customer' });
+      .send({ displayName: 'Test Customer', customerType: 'business', currencyCode: 'USD' });
 
     vendorId = vendor.body.id;
 
@@ -41,6 +41,7 @@ describe('Vendor Credits (e2e)', () => {
         name: faker.commerce.productName(),
         sellable: true,
         purchasable: true,
+        type: 'service',
         sellAccountId: 1026,
         costAccountId: 1019,
         costPrice: 100,

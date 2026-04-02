@@ -8,9 +8,10 @@ const makeExpenseRequest = () => ({
   paymentAccountId: 1000,
   referenceNo: faker.string.alphanumeric(10),
   publish: true,
-  paymentDate: faker.date.recent(),
+  paymentDate: '2023-01-15',
   categories: [
     {
+      index: 1,
       expenseAccountId: 1021,
       amount: faker.number.float({ min: 10, max: 1000, precision: 0.01 }),
       description: faker.lorem.sentence(),

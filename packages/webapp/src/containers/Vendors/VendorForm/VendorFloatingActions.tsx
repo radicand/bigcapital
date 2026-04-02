@@ -24,6 +24,7 @@ export function VendorFloatingActions() {
 
   // Vendor form context.
   const { isNewMode, setSubmitPayload } = useVendorFormContext();
+  const submitButtonText = isNewMode ? <T id={'save'} /> : <T id={'edit'} />;
 
   // Handle the submit button.
   const handleSubmitBtnClick = () => {
@@ -46,7 +47,7 @@ export function VendorFloatingActions() {
           intent={Intent.PRIMARY}
           type="submit"
           onClick={handleSubmitBtnClick}
-          text={!isNewMode ? <T id={'edit'} /> : <T id={'save'} />}
+          text={submitButtonText}
         />
         <Popover
           content={
@@ -80,4 +81,8 @@ const FloatingActionsGroup = styled(Group)`
   bottom: 0;
   background: var(--color-card-background);
   z-index: 1;
+
+  @media (max-width: 768px) {
+    padding-left: 0;
+  }
 `;

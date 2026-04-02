@@ -31,6 +31,7 @@ describe('Warehouse Transfers (e2e)', () => {
         name: faker.commerce.productName(),
         sellable: true,
         purchasable: true,
+        type: 'inventory',
         sellAccountId: 1026,
         costAccountId: 1019,
         costPrice: 100,
@@ -67,7 +68,7 @@ describe('Warehouse Transfers (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createWarehouseTransferRequest())
-      .expect(200);
+      .expect(201);
   });
 
   it('/warehouse-transfers (GET)', () => {
@@ -106,7 +107,7 @@ describe('Warehouse Transfers (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createWarehouseTransferRequest())
-      .expect(200);
+      .expect(201);
   });
 
   it('/warehouse-transfers/:id (DELETE)', async () => {

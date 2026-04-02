@@ -3,6 +3,8 @@ import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 let userId;
+let userEmail;
+let userRoleId;
 
 describe('Users (e2e)', () => {
   beforeAll(async () => {
@@ -12,7 +14,10 @@ describe('Users (e2e)', () => {
       .set('Authorization', AuthorizationHeader);
 
     if (usersResponse.body.length > 0) {
-      userId = usersResponse.body[0].id;
+      const user = usersResponse.body[0];
+      userId = user.id;
+      userEmail = user.email;
+      userRoleId = user.role_id ?? user.roleId ?? 1;
     }
   });
 
@@ -58,12 +63,14 @@ describe('Users (e2e)', () => {
     }
     if (userId) {
       return request(app.getHttpServer())
-        .post(`/users/${userId}`)
+        .put(`/users/${userId}`)
         .set('organization-id', orgainzationId)
         .set('Authorization', AuthorizationHeader)
         .send({
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
+          email: userEmail || 'bigcapital@bigcapital.com',
+          roleId: userRoleId || 1,
         })
         .expect(200);
     }

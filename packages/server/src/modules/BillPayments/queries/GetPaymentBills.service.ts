@@ -25,9 +25,10 @@ export class GetPaymentBills {
     const billPayment = await this.billPaymentModel()
       .query()
       .findById(billPaymentId)
+      .withGraphFetched('entries')
       .throwIfNotFound();
 
-    const paymentBillsIds = billPayment.entries.map((entry) => entry.id);
+    const paymentBillsIds = (billPayment.entries ?? []).map((entry) => entry.billId);
 
     const bills = await this.billModel().query().whereIn('id', paymentBillsIds);
 
