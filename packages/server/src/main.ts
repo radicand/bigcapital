@@ -16,6 +16,10 @@ async function bootstrap() {
     rawBody: true,
   });
   app.set('query parser', 'extended');
+  // Trust the first hop proxy (ingress/load-balancer) so req.ip resolves to
+  // the real client IP via X-Forwarded-For rather than the ingress cluster IP.
+  // Without this, every request from behind an ingress shares one throttle bucket.
+  app.set('trust proxy', 1);
   app.setGlobalPrefix('/api');
 
   // create and mount the middleware manually here
