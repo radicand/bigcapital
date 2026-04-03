@@ -35,9 +35,14 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.WEBAPP_IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=ref,event=branch
+            type=ref,event=tag
+            type=sha,format=short,prefix=
 
       # Builds and push the Docker image.
       - name: Build and push Docker image
@@ -49,7 +54,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ env.WEBAPP_IMAGE_NAME }}:latest,${{ env.WEBAPP_IMAGE_NAME }}:${{ github.ref_name }}
+          tags: ${{ steps.meta.outputs.tags }}
 
       - name: Export digest
         run: |
@@ -88,6 +93,11 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.SERVER_IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=ref,event=branch
+            type=ref,event=tag
+            type=sha,format=short,prefix=
 
       # Builds and push the Docker image.
       - name: Build and push Docker image
@@ -98,7 +108,7 @@ jobs:
           file: ./packages/server/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ env.SERVER_IMAGE_NAME }}:latest,${{ env.SERVER_IMAGE_NAME }}:${{ github.ref_name }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Export digest
@@ -139,6 +149,19 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.MIGRATION_IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=ref,event=branch
+            type=ref,event=tag
+            type=sha,format=short,prefix=
+
+      - name: Extract metadata for server base image tag
+        id: server_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.SERVER_IMAGE_NAME }}
+          tags: |
+            type=sha,format=short,prefix=
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -148,7 +171,7 @@ jobs:
           file: ./docker/migration/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ env.MIGRATION_IMAGE_NAME }}:latest,${{ env.MIGRATION_IMAGE_NAME }}:${{ github.ref_name }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BASE_SERVER_IMAGE=${{ env.SERVER_IMAGE_NAME }}:${{ github.ref_name }}
+            BASE_SERVER_IMAGE=${{ env.SERVER_IMAGE_NAME }}:${{ steps.server_meta.outputs.version }}

@@ -35,9 +35,12 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.WEBAPP_IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,format=short,prefix=
 
       # Builds and push the Docker image.
       - name: Build and push Docker image
@@ -49,7 +52,7 @@ jobs:
           platforms: linux/arm64
           push: true
           labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ env.WEBAPP_IMAGE_NAME }}:radicand-develop
+          tags: ${{ steps.meta.outputs.tags }}
 
       - name: Export digest
         run: |
@@ -88,6 +91,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.SERVER_IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,format=short,prefix=
 
       # Builds and push the Docker image.
       - name: Build and push Docker image
@@ -98,7 +104,7 @@ jobs:
           file: ./packages/server/Dockerfile
           platforms: linux/arm64
           push: true
-          tags: ${{ env.SERVER_IMAGE_NAME }}:radicand-develop
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Export digest
@@ -139,6 +145,17 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.MIGRATION_IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,format=short,prefix=
+
+      - name: Extract metadata for server base image tag
+        id: server_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.SERVER_IMAGE_NAME }}
+          tags: |
+            type=sha,format=short,prefix=
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -148,7 +165,7 @@ jobs:
           file: ./docker/migration/Dockerfile
           platforms: linux/arm64
           push: true
-          tags: ${{ env.MIGRATION_IMAGE_NAME }}:radicand-develop
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BASE_SERVER_IMAGE=${{ env.SERVER_IMAGE_NAME }}:radicand-develop
+            BASE_SERVER_IMAGE=${{ env.SERVER_IMAGE_NAME }}:${{ steps.server_meta.outputs.version }}
