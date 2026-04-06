@@ -93,11 +93,12 @@ export class AttachmentsController {
     const data = await this.attachmentsApplication.get(documentId);
 
     const byte = await data.Body.transformToByteArray();
-    const extension = mime.extension(data.ContentType);
+    const contentType = data.ContentType || 'application/octet-stream';
+    const extension = mime.extension(contentType) || 'bin';
     const buffer = Buffer.from(byte);
 
     res.set('Content-Disposition', `filename="${documentId}.${extension}"`);
-    res.set('Content-Type', data.ContentType);
+    res.set('Content-Type', contentType);
     res.send(buffer);
   }
 
